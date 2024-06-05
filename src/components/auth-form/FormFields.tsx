@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { Formik, Form } from "formik";
 import "./AuthForm.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
+import { validationSchema } from "./ValidationSchema";
+import InputField from "./InputField";
 
 interface FormFieldsProps {
   onSubmit: (token: string) => void;
@@ -16,24 +15,6 @@ const FormFields: React.FC<FormFieldsProps> = ({ onSubmit }) => {
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
-
-  const validationSchema = Yup.object({
-    name: Yup.string().required("Имя обязательно"),
-    email: Yup.string()
-      .email("Неправильный формат email")
-      .required("Email обязателен"),
-    password: Yup.string()
-      .required("Пароль обязателен")
-      .min(3, "Пароль должен содержать минимум 3 символа")
-      .max(10, "Пароль должен содержать максимум 10 символов")
-      .matches(/[A-Z]/, "Пароль должен содержать хотя бы одну заглавную букву")
-      .matches(/[a-z]/, "Пароль должен содержать хотя бы одну строчную букву")
-      .matches(/\d/, "Пароль должен содержать хотя бы одну цифру")
-      .matches(/[!@#$%^&*(),.?":{}|<>]/, "Пароль должен содержать хотя бы один специальный символ"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), undefined], "Пароли должны совпадать")
-      .required("Подтверждение пароля обязательно"),
-  });
   
   const handleSubmit = async (values: { email: string; password: string }) => {
     try {
@@ -71,85 +52,34 @@ const FormFields: React.FC<FormFieldsProps> = ({ onSubmit }) => {
       {({ isSubmitting }) => (
         <Form className="registration-form">
           <h2 className="registration-form__title">Регистрация</h2>
-          <div className="form-group">
-            <label className="form-group__label" htmlFor="name">
-              Имя
-            </label>
-            <Field
-              type="text"
-              id="name"
-              name="name"
-              className="form-group__input"
-            />
-            <ErrorMessage
-              name="name"
-              component="div"
-              className="error-message"
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-group__label" htmlFor="email">
-              Электронная почта
-            </label>
-            <Field
-              type="email"
-              id="email"
-              name="email"
-              className="form-group__input"
-            />
-            <ErrorMessage
-              name="email"
-              component="div"
-              className="error-message"
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-group__label" htmlFor="password">
-              Пароль
-            </label>
-            <div className="password-wrapper">
-              <Field
-                type={passwordVisible ? "text" : "password"}
-                id="password"
-                name="password"
-                className="form-group__input"
-              />
-              <FontAwesomeIcon
-                icon={passwordVisible ? faEye : faEyeSlash}
-                onClick={togglePasswordVisibility}
-                className="form-group__icon"
-              />
-            </div>
-            <ErrorMessage
-              name="password"
-              component="div"
-              className="error-message"
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-group__label" htmlFor="confirmPassword">
-              Повторите пароль
-            </label>
-            <div className="password-wrapper">
-              <Field
-                type={passwordVisible ? "text" : "password"}
-                id="confirmPassword"
-                name="confirmPassword"
-                className="form-group__input"
-              />
-              <FontAwesomeIcon
-                icon={passwordVisible ? faEye : faEyeSlash}
-                onClick={togglePasswordVisibility}
-                className="form-group__icon"
-              />
-            </div>
-            <ErrorMessage
-              name="confirmPassword"
-              component="div"
-              className="error-message"
-            />
-          </div>
-
+          <InputField
+            type="text"
+            id="name"
+            name="name"
+            label="Имя"
+          />
+          <InputField
+            type="email"
+            id="email"
+            name="email"
+            label="Электронная почта"
+          />
+          <InputField
+            type="password"
+            id="password"
+            name="password"
+            label="Пароль"
+            passwordVisible={passwordVisible}
+            onTogglePasswordVisibility={togglePasswordVisibility}
+          />
+          <InputField
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            label="Повторите пароль"
+            passwordVisible={passwordVisible}
+            onTogglePasswordVisibility={togglePasswordVisibility}
+          />
           <div className="form-group">
             <button
               className="submit-button"

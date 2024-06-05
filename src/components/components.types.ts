@@ -16,3 +16,12 @@ export interface UserCardProps {
   email: string
   onUserClick: (user: any) => void
 }
+
+export interface InputFieldProps {
+  type: string;
+  id: string;
+  name: string;
+  label: string;
+  passwordVisible?: boolean;
+  onTogglePasswordVisibility?: () => void;
+}
