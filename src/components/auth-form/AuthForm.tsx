@@ -16,7 +16,6 @@ const AuthForm: React.FC = () => {
 
   return (
     <div className="registration-form-container">
-      <h2 className="registration-form__title">Регистрация</h2>
       <FormFields onSubmit={handleSubmit} />
     </div>
   );
